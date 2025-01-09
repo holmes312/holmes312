@@ -10,6 +10,14 @@ import requests
 from flask import Flask
 import threading
 import os
+import ssl
+import aiohttp
+import logging
+logging.basicConfig(level=logging.DEBUG)
+ssl_context = ssl.create_default_context()
+connector = aiohttp.TCPConnector(ssl=ssl_context)
+
+session = aiohttp.ClientSession(connector=connector)
 
 class BotWithSender(User):
     async def sender(self, peer_id: int, message: str, payload=None):
@@ -19,6 +27,8 @@ Denis = User("vk1.a.Wu5KGqQNtr4DpgfFSbkR-SPcDGSJ0YQjE84Dp5CYo-H1TPZFiTt9JvYoE_L8
 gosha = BotWithSender('vk1.a.wl9gKEEsjqPFfO83ZYX_DICNf_H796MhoE0Kj52-5IFW7xyL4tKnaWhaqexBq6Za2txTF_I2si7gwN3d9NW0yO9TxKFqgMVJihauPB8_Tq8jV4FGufEOCRnKaiWtS4YyyKkah8v5_Okw4l7HpufjepfCbey_yNeYaG900s9GzHzAJQj55bI2yVD2EBaJZR1RmzJ_NU6bPee5eVBNBddD9A')
 bot = Bot("vk1.a.2dG-eNOBzQsxYGyWUeXgEK8FJ3kwWkZDE3F1JjeLIAaOIGbl0FK6CT-Pk7gpJ2FvfPzoYODyGKJRGM_1d9bhoJ7WY5XIL_bBDxvbqgEZu7cWiTyLUDB0O8_2aTwebxlorkurVzx4Q2Q1w777PmyaXtXzs8IMwPl3WOGp31gNzJ_4e5PgyF1TwzdR9gWWbTXOq7wNABVRMqATHhCrekiVSA")
 hotdog = User('vk1.a.hqgSXtT4nkztV3-BsKOkoQjup_gVNqb3-XJsAw_NY8JlT5XN-AnDYr267MRQFmlOm8iZlIblBSz6p5UPmWQ4iEC5rv4_aDRF37obtNHnbBZMaHPHUw-zktYi_l2mov5xJMtQE9bwCt5000OA_ICmJhMi__lP8bvJNcMAXZdH01YMijaMzRp1rnlwDgj_eFudQzDBYNlCop4A_z-mSvcJHQ')
+
+app = Flask(__name__)
 
 uploader = PhotoMessageUploader(bot.api)
 
@@ -846,7 +856,6 @@ async def message_handler(message: Message):
                     random_id=0,
                 )
 
-app = Flask(__name__)
 
 @app.route('/')
 def index():
@@ -856,11 +865,8 @@ def run_flask():
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
 
-# Запуск Flask в отдельном потоке
-threading.Thread(target=run_flask).start()
-
-
 async def run_users():
     await asyncio.gather(Denis.run_polling(), bot.run_polling(), gosha.run_polling(),hotdog.run_polling())
+    await threading.Thread(target=run_flask).start()
 
 asyncio.run(run_users())
