@@ -13,6 +13,9 @@ import os
 import ssl
 import aiohttp
 import logging
+from hypercorn.asyncio import serve
+from hypercorn.config import Config
+
 logging.basicConfig(level=logging.DEBUG)
 ssl_context = ssl.create_default_context()
 
@@ -860,12 +863,12 @@ async def message_handler(message: Message):
 def index():
     return "Бот запущен и работает!"
 
-def run_flask():
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+async def run_flask():
+    config = Config()
+    config.bind = ["0.0.0.0:5000"]
+    await serve(app, config)
 
 async def run_users():
-    await asyncio.gather(Denis.run_polling(), bot.run_polling(), gosha.run_polling(),hotdog.run_polling())
-    await threading.Thread(target=run_flask).start()
+    await asyncio.gather(Denis.run_polling(), bot.run_polling(), gosha.run_polling(), hotdog.run_polling(), run_flask())
 
 asyncio.run(run_users())
