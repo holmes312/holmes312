@@ -30,8 +30,9 @@ gosha = BotWithSender('vk1.a.wl9gKEEsjqPFfO83ZYX_DICNf_H796MhoE0Kj52-5IFW7xyL4tK
 bot = Bot("vk1.a.2dG-eNOBzQsxYGyWUeXgEK8FJ3kwWkZDE3F1JjeLIAaOIGbl0FK6CT-Pk7gpJ2FvfPzoYODyGKJRGM_1d9bhoJ7WY5XIL_bBDxvbqgEZu7cWiTyLUDB0O8_2aTwebxlorkurVzx4Q2Q1w777PmyaXtXzs8IMwPl3WOGp31gNzJ_4e5PgyF1TwzdR9gWWbTXOq7wNABVRMqATHhCrekiVSA")
 hotdog = User('vk1.a.hqgSXtT4nkztV3-BsKOkoQjup_gVNqb3-XJsAw_NY8JlT5XN-AnDYr267MRQFmlOm8iZlIblBSz6p5UPmWQ4iEC5rv4_aDRF37obtNHnbBZMaHPHUw-zktYi_l2mov5xJMtQE9bwCt5000OA_ICmJhMi__lP8bvJNcMAXZdH01YMijaMzRp1rnlwDgj_eFudQzDBYNlCop4A_z-mSvcJHQ')
 
-app = Flask(__name__)
-
+app = Quart(__name__)
+port = int(os.environ.get("PORT", 5000))
+app.run(host='0.0.0.0', port=port)
 uploader = PhotoMessageUploader(bot.api)
 
 MRK = 2000000459  
