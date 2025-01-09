@@ -7,7 +7,9 @@ import re
 import time
 from io import BytesIO
 import requests
-    
+from flask import Flask
+import threading
+
 class BotWithSender(User):
     async def sender(self, peer_id: int, message: str, payload=None):
         await self.api.messages.send(peer_id=peer_id, message=message, random_id=0, payload=payload)
@@ -842,6 +844,20 @@ async def message_handler(message: Message):
                     message=f"Ошибка при обработке пересланного сообщения: {e}",
                     random_id=0,
                 )
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return "Бот запущен и работает!"
+
+def run_flask():
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
+
+# Запуск Flask в отдельном потоке
+threading.Thread(target=run_flask).start()
+
 
 async def run_users():
     await asyncio.gather(Denis.run_polling(), bot.run_polling(), gosha.run_polling(),hotdog.run_polling())
