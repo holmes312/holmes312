@@ -1,3 +1,4 @@
 git+https://github.com/vkbottle/vkbottle.git
 aiohttp
 requests
+flask 
