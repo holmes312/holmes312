@@ -9,6 +9,7 @@ from io import BytesIO
 import requests
 from flask import Flask
 import threading
+import os
 
 class BotWithSender(User):
     async def sender(self, peer_id: int, message: str, payload=None):
