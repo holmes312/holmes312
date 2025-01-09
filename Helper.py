@@ -15,9 +15,8 @@ import aiohttp
 import logging
 logging.basicConfig(level=logging.DEBUG)
 ssl_context = ssl.create_default_context()
-connector = aiohttp.TCPConnector(ssl=ssl_context)
 
-session = aiohttp.ClientSession(connector=connector)
+
 
 class BotWithSender(User):
     async def sender(self, peer_id: int, message: str, payload=None):
